@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Cartas</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .contenedor-cartas {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            perspective: 1000px;
+        }
+        
+        .carta {
+            width: 240px;
+            height: 250px;
+            position: relative;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+        
+        .carta.volteada {
+            transform: rotateY(180deg);
+        }
+        
+        .cara {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .trasera {
+            background: linear-gradient(135deg, #2c3e50, #4a69bd);
+        }
+        
+        .trasera::after {
+            content: "?";
+            font-size: 48px;
+            color: white;
+        }
+        
+        .frontal {
+            background-color: white;
+            transform: rotateY(180deg);
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .carta:nth-child(1) .frontal { color: #e74c3c; }
+        .carta:nth-child(2) .frontal { color: #2ecc71; }
+        .carta:nth-child(3) .frontal { color: #3498db; }
+        .carta:nth-child(4) .frontal { color: #f39c12; }
+        
+        button {
+            padding: 12px 24px;
+            background-color: #8e44ad;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #6c3483;
+        }
+    </style>
+</head>
+<body>
+    <h1>Juego de Cartas</h1>
+    
+    <div class="contenedor-cartas">
+        <div class="carta">
+            <div class="cara trasera"></div>
+            <div class="cara frontal">Potencialidad</div>
+        </div>
+        <div class="carta">
+            <div class="cara trasera"></div>
+            <div class="cara frontal">Filtro</div>
+        </div>
+        <div class="carta">
+            <div class="cara trasera"></div>
+            <div class="cara frontal">Advisor</div>
+        </div>
+        <div class="carta">
+            <div class="cara trasera"></div>
+            <div class="cara frontal">FPGA</div>
+        </div>
+    </div>
+    
+    <button id="mezclarBtn">Mezclar y Voltear</button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cartas = document.querySelectorAll('.carta');
+            const botonMezclar = document.getElementById('mezclarBtn');
+            let mezcladas = false;
+            
+            botonMezclar.addEventListener('click', function() {
+                if (!mezcladas) {
+                    // Mezclar las cartas
+                    const contenedor = document.querySelector('.contenedor-cartas');
+                    for (let i = contenedor.children.length; i >= 0; i--) {
+                        contenedor.appendChild(contenedor.children[Math.random() * i | 0]);
+                    }
+                    
+                    // Voltear las cartas después de mezclar
+                    setTimeout(function() {
+                        cartas.forEach(carta => {
+                            carta.classList.add('volteada');
+                        });
+                        mezcladas = true;
+                        botonMezclar.textContent = 'Reiniciar';
+                    }, 500);
+                } else {
+                    // Reiniciar el juego
+                    cartas.forEach(carta => {
+                        carta.classList.remove('volteada');
+                    });
+                    mezcladas = false;
+                    botonMezclar.textContent = 'Mezclar y Voltear';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
